@@ -40,6 +40,14 @@
 \usepackage{lipsum}\usepackage[base]{babel} % need to go together
 \newcommand{\shortlipsum}{{\color{gray!99} \lipsum[1][1-10]}}
 
+%%
+\RequirePackage{tabularray}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{functional} %% Enables evaluate
+\NewColumnType{R}{X[r]}
+\usepackage{soul}
+\setul{.35ex}{.25ex}
+
 %% Math packages
 \RequirePackage{amssymb}
 \RequirePackage{amsmath}
@@ -58,7 +66,7 @@
 \usepackage[
     backend=bibtex,            % Use legacy bibtex backend (biber is better)
     natbib=true,               % Load aliases for citation commands
-    citestyle=authoryear-comp, % Inline: Author year, compressed
+    citestyle=numeric-comp,    % Inline: Author year, compressed
     maxcitenames=1,            % Inline: max 1 author name
     bibstyle=authoryear,       % Bibliography: Author year
     giveninits=true,           % Bibliography: first and middle name initials
@@ -72,11 +80,14 @@
     eprint=false               % Bibliography: don't print eprint information,
     ]{biblatex}
 %%% bibliography: print authors as "last name, first name"
-    \DeclareNameAlias{sortname}{family-given}
+%    \DeclareNameAlias{sortname}{family-given}
 %%% Add bib files
     \addbibresource{references.bib}
     \addbibresource{referencesR.bib}
-
+\csappto{blx@filehook@postload@numeric.bbx}{%
+\mode<presentation>{%
+\setbeamertemplate{bibliography item}{%
+\insertbiblabel}}}
 %% \begin{minipage}[position][height][inner-pos]{width}
 
 \begin{document}
@@ -84,35 +95,163 @@
 \begin{frame}[t]
 
   \colorbox{pink}{
-    \begin{minipage}[t][80cm][t]{58cm}
+    \begin{minipage}[t][76cm][t]{58cm}
       \colorbox{yellow}{
         \begin{minipage}[t][20cm][t]{28cm}
           Left
+          \begin{block}{Automatic Dynamic Relevance Determination}
+            A framework for Gaussian Processes with functional inputs
+            $X(t)\in\mathcal{X} = \left\{X:[0,1]\to\mathbb{R}\right\}$, $t\in[0, 1]$
+            and a scalar output $y\in\mathbb{R}$. Let $f:\mathcal{X}\to\mathcal{Y}$ be
+            an unknown function with evaluations $y_i = f(X_i)$, $i = 1, \dots,
+            N\in\mathbb{N}$.
+            \begin{align}
+              \mathbf{y}
+              &\sim \mathcal{N}\left(\mathbf{m}_f, \sigma_{f}^{2} \ \mathbf{R}_f
+                + \sigma_{\varepsilon}^{2}\mathbf{I}\right) \\
+              (\mathbf{m}_f)_i
+              &= m_f(X_i) \\
+              {\left(\mathbf{R}_f\right)}_{ij}
+              &=
+                \text{exp}\left\{
+                -0.5 \phi^{-2} \ d_f(X_i, X_j)
+                \right\}
+              \\
+              d_f(X_i, X_j)
+              &= \int_{\mathcal{T}}
+                \omega(t)
+                {\left(X_i(t) - X_j(t) \right)}^2 dt
+              \\
+              \omega(t)
+              &: \mathcal{T}\to\mathbb{R}^+
+            \end{align}
+            $\sigma_{\varepsilon}^2 > 0$,
+            $\sigma_{f}^2 > 0$,
+            $\phi > 0$,
+            $i, j = 1, \dots, N$,
+            and $m_f(\cdot)$ is a mean function left unspecified w.l.o.g.
+          \end{block}
         \end{minipage}
       }
       \colorbox{green}{
         \begin{minipage}[t][20cm][t]{28cm}
           Right
+          \begin{block}{Microwave Limb Sounder}
+            \begin{itemize}
+            \item Computer model: forward
+              model~\cite{read2006,schwartz2006,waters2006} estimates, or
+              \emph{retrieves}, geophysical variables from electromagnetic radiation
+            \item Planetwide, daily data products~\cite{liversey2020} and uncertainty
+              experiments~\cite{turmon2019,braverman2021} rely on a myriad of runs
+            \item Output: score for reflected sunlight around 190GHz~\cite{johnson2020}
+            \item Functional input: atmospheric profiles over a vertical grid
+            \item We consider some species in pressure regions expected to be
+              well-informed by the measurements~\cite{liversey2020}
+            \end{itemize}
+          \end{block}
         \end{minipage}
       }
       \vskip1cm
       \colorbox{yellow!33}{
         \begin{minipage}[t][50cm][t]{58cm}
           Data
+          \begin{block}{Data}
+            \begin{figure}
+              \centering
+              \includegraphics[width=.85\linewidth]{inc/mls_input_profiles}
+            \end{figure}
+
+            \begin{center}
+              Radiance score variability seems associated with the tropopause Ozone
+              concentration
+            \end{center}
+          \end{block}
+
+          \begin{block}{Asymmetric Double Exponential weight function}
+            \begin{figure}
+              \centering
+              \includegraphics[width=.85\linewidth]{inc/mls_weight_profiles}
+            \end{figure}
+
+            \begin{equation}
+              \omega(t)
+              =
+              \text{exp}\left\{-(t - \tau)\lambda\kappa^s s\right\}
+            \end{equation}
+            Space:
+            $\omega(t): \mathcal{T} = [0, 1] \to (0, 1]$,
+            $s = \text{sign}(t - \tau)$,
+            $\tau\in[0,1]$,
+            $\lambda > 0$,
+            $\kappa > 0$ \\
+            Priors:
+            $\indent\tau \sim \textsc{Beta}$,
+            $\lambda \sim \textsc{N}^{+}$,
+            $\log(\kappa) \sim \textsc{N}$
+          \end{block}
         \end{minipage}
       }
     \end{minipage}%
   }
   \colorbox{blue!20}{
-    \begin{minipage}[t][80cm][t]{58cm}
+    \begin{minipage}[t][76cm][t]{58cm}
       Results
+      \begin{block}{In which part of the atmosphere are the inputs most relevant?}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{inc/mmls_weight_posterior_mini1}
+          \label{fig:mmls-weight-posterior-mini1}
+        \end{figure}
+      \end{block}
+
+      \begin{minipage}[t]{1.0\linewidth}
+        \begin{minipage}[t]{.5\linewidth}
+          \begin{block}{Which inputs are more relevant?}
+            \begin{figure}
+              \centering
+              \includegraphics[width=\linewidth]{inc/mls_weight_integral.pdf}
+            \end{figure}
+          \end{block}
+        \end{minipage}
+        \begin{minipage}[t]{.5\linewidth}
+          \begin{block}{Out-of-sample prediction}
+            \begin{tblr}[evaluate=\fileInput]{
+                width=\textwidth,
+                colspec={Q[l,11ex]RRRRR},
+                rows={font=\normalsize}}
+              \fileInput{inc/mmls_validation_mean}
+            \end{tblr}
+          \end{block}
+          \begin{block}{In summary...}
+            \begin{itemize}
+            \item Fewer parameters than a vector representation
+            \item Better prediction than FPCA (information loss)
+            \item Rich interpretation
+            \item The weight posterior can feed downstream analysis (e.g.,
+              calibration, design)
+            \end{itemize}
+          \end{block}
+        \end{minipage}
+      \end{minipage}
     \end{minipage}%
   }
   \colorbox{black}{
-    \begin{minipage}[t][80cm][t]{3cm}
+    \begin{minipage}[t][76cm][t]{3cm}
       %Padding
     \end{minipage}%
   }
+
+  \begin{minipage}[t][5cm][t]{116cm}
+    \textbf{Acknowledgements}. MLS team at Jet Propulsion
+    Laboratory for their insight in the instrument, the forward model, and other
+    relevant atmospheric science concepts.
+    Partially funded by Iowa State University through the
+    Presidential Interdisciplinary Research Initiative on C-CHANGE:~Science
+    for a Changing Agriculture, and the Foundation for Food and Agriculture
+    Research.
+    \textbf{References}.
+    \printbibliography[heading=none]{}
+  \end{minipage}
 
 
 
