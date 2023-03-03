@@ -4,7 +4,7 @@ Poster for the Conference on Data Analysis 2023
 
 ** How to compile?
 
-   Clone and simply call `latexmk` from the command line. The compiled file will
+   Clone and simply call ~latexmk~ from the command line. The compiled file will
    be written in the =out= subfolder.
 
 ** Resources
