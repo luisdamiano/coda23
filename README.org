@@ -2,6 +2,11 @@
 
 Poster for the Conference on Data Analysis 2023
 
+** How to compile?
+
+   Clone and simply call `latexmk` from the command line. The compiled file will
+   be written in the =out= subfolder.
+
 ** Resources
 
    - [[https://web.cvent.com/event/9d7caad6-df65-4288-8300-09f0fb6d2767/summary][Overview - CoDA 2023]] ([[https://www.lanl.gov/coda2023][lanl.gov/coda2023]])
