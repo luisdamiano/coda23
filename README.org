@@ -1,0 +1,8 @@
+* Automatic Relevance Determination for Gaussian Processes with Functional Inputs
+
+Poster for the Conference on Data Analysis 2023
+
+** Resources
+
+   - [[https://web.cvent.com/event/9d7caad6-df65-4288-8300-09f0fb6d2767/summary][Overview - CoDA 2023]] ([[https://www.lanl.gov/coda2023][lanl.gov/coda2023]])
+   - [[https://www.ctan.org/pkg/beamerposter][CTAN: Package beamerposter]]

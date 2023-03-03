@@ -1,0 +1,24 @@
+Automatic Relevance Determination for Gaussian Processes with Functional Inputs
+
+In the context of Gaussian process regression, it is common to treat functional
+inputs as a vector. The parameter space becomes prohibitively complex as the
+functional input definition increases, thus hindering automatic relevance
+determination. Generalizing work for time-varying inputs, we introduce the
+automatic dynamic relevance determination (ADRD) framework to enforce smoothness
+on the predictive relevance profile over the index space with only a limited
+number of parameters. Fully Bayesian estimation is carried out to identify
+relevant regions of the functional input space and validation is performed to
+benchmark against traditional vector-input model specifications. In a case study
+for surrogate modeling, we find that ADRD outperforms models with input
+dimension reduction via functional principal component analysis. Furthermore,
+the predictive power is comparable to high-dimensional models, in terms of both
+mean prediction and uncertainty, with 10 times fewer tuning parameters. Finally,
+ADRD rules out erratic patterns associated with vector-input models.
+
+Luis is a Ph.D. Candidate in Statistics at Iowa State University. His research
+focuses on surrogate modeling, in particular the topic of automatic relevance
+determination for Gaussian processes with functional inputs. He is also
+co-author in environment and soil ecology papers. He had previously worked on
+time series and spatial modeling, including published software. He was an intern
+at Los Alamos National Laboratory and a Google Summer of Code student for the R
+project for statistical computing on two occasions.
