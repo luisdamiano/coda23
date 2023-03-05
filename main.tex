@@ -109,7 +109,7 @@
               \mathbf{y}
               &\sim \mathcal{N}\left(\mathbf{m}_f, \sigma_{f}^{2} \ \mathbf{R}_f
                 + \sigma_{\varepsilon}^{2}\mathbf{I}\right) \\
-              (\mathbf{m}_f)_i
+              {(\mathbf{m}_f)}_i
               &= m_f(X_i) \\
               {\left(\mathbf{R}_f\right)}_{ij}
               &=
@@ -131,6 +131,55 @@
             $i, j = 1, \dots, N$,
             and $m_f(\cdot)$ is a mean function left unspecified w.l.o.g.
           \end{block}
+
+          \begin{block}{Choice of weight function}
+            \begin{description}
+            \item Learn how the input predictive relevance
+              varies over the index space
+            \item[Smoothness] Enforce smoothness on relevance
+              over the index space
+            \item[Parsimony] Fewer parameters than the vector representation
+            \item[Interpretation]: for modeling feedback loop and
+              physical model understanding
+            \end{description}
+          \end{block}
+
+          \begin{block}{Learning \& validation}
+            Fully Bayesian inference on the unknown quantities $\bm{\theta}$.
+            One MCMC chain~\citep{raftery1992} with $M \in \mathbb{N}$ post warm-up
+            samples generated via the NUTS algorithm~\citep{hoffman2014}.
+            \begin{align}
+              \label{eq:margina-likelihood}
+              \log p(\mathbf{y} | \mathbf{X}, \bm{\theta})
+              =& -\frac{1}{2}
+                 {(\mathbf{y} - \mathbf{m}_y)}^\top
+                 {\mathbf{S}_y}^{-1}
+                 {(\mathbf{y} - \mathbf{m}_y)}
+                 -\frac{1}{2}
+                 \log | \mathbf{S}_y |
+                 - \frac{n}{2} \log 2\pi \\
+              \label{eq:parameter-posterior}
+              \log p(\bm{\theta} | \mathbf{y}, \mathbf{X})
+              \propto&
+                       \log p(\mathbf{y} | \mathbf{X}, \bm{\theta}) +
+                       \log p(\bm{\theta}).
+            \end{align}
+
+            Validation statistic posterior expectation approximated using a thinned
+            posterior parameter sample with $\tilde{M} \in \mathbb{N}$ draws.
+            \begin{align}
+              \hat{v}_1
+              &= {\tilde{M}}^{-1} \sum_{{\tilde{m}}=1}^{{\tilde{M}}} N^{-\frac{1}{2}} \norm{%
+                \EE{\bm{y}_{*} | \bm{X}, \bm{X}_{*}, \bm{y}, {\bm{\theta}}_{{\tilde{m}}}} -
+                \bm{y}_{*}
+                } \label{eq:validation-rmse} \\
+              \hat{v}_2
+              &= {\tilde{M}}^{-1} \sum_{{\tilde{m}}=1}^{{\tilde{M}}}
+                p(\bm{y}_{*} | \bm{X}, \bm{X}_{*}, \bm{y},
+                {\bm{\theta}}_{{\tilde{m}}}) \label{eq:validation-ppld}
+            \end{align}
+          \end{block}
+
         \end{minipage}
       }
       \colorbox{green}{
