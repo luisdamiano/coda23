@@ -102,11 +102,11 @@ Systems Engineering, Iowa State University}
 
 \begin{frame}[t]
 
-  \colorbox{pink}{
+  \colorbox{pink!0}{
     \begin{minipage}[t][76cm][t]{58cm}
-      \colorbox{yellow}{
+      \colorbox{yellow!0}{
         \begin{minipage}[t][40cm][t]{28cm}
-          Left
+          %Left
           \begin{block}{Automatic Dynamic Relevance Determination}
             A \textbf{framework for Gaussian
             Processes with functional inputs} \citep{damiano2022}.
@@ -202,10 +202,11 @@ Systems Engineering, Iowa State University}
           \end{block}
         \end{minipage}
       }
-      \colorbox{green}{
+      \colorbox{green!0}{
         \begin{minipage}[t][40cm][t]{28cm}
-          Right
+          % Right
           \begin{block}{Asymmetric Squared Exponential weight function}
+            \vskip1ex
             \begin{figure}
               \centering
               \includegraphics[width=.85\linewidth]{inc/coda_weight_profiles_fsc040}
@@ -232,6 +233,7 @@ Systems Engineering, Iowa State University}
             $\log(\kappa) \sim \textsc{N}$
           \end{block}
 
+          \vskip2.9ex
           \begin{block}{Input relevance statistics}
             \begin{minipage}[t]{.45\linewidth}
               \begin{center}
@@ -251,6 +253,8 @@ Systems Engineering, Iowa State University}
             \end{minipage}
           \end{block}
 
+          \vskip3ex
+
           \begin{block}{Choice of weight function}
             \begin{description}
             \item[Dynamic] input predictive relevance varies over the index
@@ -264,11 +268,12 @@ Systems Engineering, Iowa State University}
           \end{block}
         \end{minipage}
       }
-      \vskip1cm
-      \colorbox{yellow!33}{
+      \vskip3ex
+      \colorbox{yellow!0}{
         \begin{minipage}[t][50cm][t]{58cm}
-          Data
+          %Data
           \begin{block}{Microwave Limb Sounder}
+            \vskip1ex
             \begin{itemize}
             \item Computer model: forward
               model~\cite{read2006,schwartz2006,waters2006} estimates, or
@@ -296,10 +301,11 @@ Systems Engineering, Iowa State University}
       }
     \end{minipage}%
   }
-  \colorbox{blue!20}{
+  \colorbox{blue!0}{
     \begin{minipage}[t][76cm][t]{58cm}
-      Results
+      %Results
       \begin{block}{Are inputs equally relevant over the atmosphere?}
+        \vskip1ex
         \begin{figure}
           \centering
           % \includegraphics[width=\textwidth]{inc/mmls_weight_posterior_mini1}
@@ -308,15 +314,17 @@ Systems Engineering, Iowa State University}
         \end{figure}
       \end{block}
 
-      \begin{minipage}[t]{1.0\linewidth}
-        \begin{minipage}[t]{.5\linewidth}
+      \begin{minipage}[t]{58cm}
+        \begin{minipage}[t]{28cm}
           \begin{block}{Are all the inputs equally relevant?}
+            \vskip1ex
             \begin{figure}
               \centering
               \includegraphics[width=.85\linewidth]{inc/mls_weight_integral_fsc070.pdf}
             \end{figure}
           \end{block}
           \begin{block}{How does ADRD compare to ARD predictionwise?}
+            \vskip1ex
             \centering
             \begin{tblr}[evaluate=\fileInput]{
                 width=.85\textwidth,
@@ -346,7 +354,7 @@ Systems Engineering, Iowa State University}
             \end{itemize}
           \end{block}
         \end{minipage}
-        \begin{minipage}[t]{.5\linewidth}
+        \begin{minipage}[t]{28cm}
           \begin{block}{Onwards and upwards}
             Toward a framework for Gaussian processes with functional inputs
             $Y = f(X_1(u), X_2(v), \dots, x_1, x_2, \dots)$
