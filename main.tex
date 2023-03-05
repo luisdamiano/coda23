@@ -27,6 +27,9 @@
   \end{beamercolorbox}
 }%
 
+\setbeamertemplate{bibliography item}{}
+\setbeamertemplate{description item}{\textbf{\insertdescriptionitem}}
+
 \title{Automatic Relevance Determination
   for Gaussian Processes with Functional Inputs}
 
@@ -77,7 +80,7 @@ Systems Engineering, Iowa State University}
     giveninits=true,           % Bibliography: first and middle name initials
     dashed=false,              % Bibliography: no dash for recurrent authors
     abbreviate=true,           % Bibliography: abbreviate
-    maxbibnames=100,           % Bibliography: all author names
+    maxbibnames=5,           % Bibliography: max 1 author names
     sorting=nyt,               % Bibliography: sort by name, year, title
     isbn=true,                 % Bibliography: print ISBN
     url=false,                 % Bibliography: don't print URL
@@ -89,10 +92,10 @@ Systems Engineering, Iowa State University}
 %%% Add bib files
     \addbibresource{references.bib}
     \addbibresource{referencesR.bib}
-\csappto{blx@filehook@postload@numeric.bbx}{%
-\mode<presentation>{%
-\setbeamertemplate{bibliography item}{%
-\insertbiblabel}}}
+% \csappto{blx@filehook@postload@numeric.bbx}{%
+% \mode<presentation>{%
+% \setbeamertemplate{bibliography item}{%
+% \insertbiblabel}}}
 %% \begin{minipage}[position][height][inner-pos]{width}
 
 \begin{document}
@@ -102,14 +105,21 @@ Systems Engineering, Iowa State University}
   \colorbox{pink}{
     \begin{minipage}[t][76cm][t]{58cm}
       \colorbox{yellow}{
-        \begin{minipage}[t][20cm][t]{28cm}
+        \begin{minipage}[t][40cm][t]{28cm}
           Left
           \begin{block}{Automatic Dynamic Relevance Determination}
-            A framework for Gaussian Processes with functional inputs
-            $X(t)\in\mathcal{X} = \left\{X:[0,1]\to\mathbb{R}\right\}$, $t\in[0, 1]$
-            and a scalar output $y\in\mathbb{R}$. Let $f:\mathcal{X}\to\mathcal{Y}$ be
-            an unknown function with evaluations $y_i = f(X_i)$, $i = 1, \dots,
-            N\in\mathbb{N}$.
+            A \textbf{framework for Gaussian
+            Processes with functional inputs} \citep{damiano2022}.
+            We generalize previous work with indexed
+            inputs \citep{morris2012,muehlenstaedt2017,kuttubekova2019} and
+            incorporate the ideas behind automatic relevance determination
+            for vectors \citep{neal1996}.
+
+            Let $X(t)\in\mathcal{X} = \left\{X:[0,1]\to\mathbb{R}\right\}$,
+            $t\in[0, 1]$ be a functional input, $y\in\mathbb{R}$ a scalar
+            output, and $f:\mathcal{X}\to\mathcal{Y}$ an unknown function with
+            evaluations $y_i = f(X_i)$, $i = 1, \dots, N\in\mathbb{N}$. We place
+            a GP prior on $f$.
             \begin{align}
               \mathbf{y}
               &\sim \mathcal{N}\left(\mathbf{m}_f, \sigma_{f}^{2} \ \mathbf{R}_f
@@ -130,48 +140,53 @@ Systems Engineering, Iowa State University}
               \omega(t)
               &: \mathcal{T}\to\mathbb{R}^+
             \end{align}
+            Space:
             $\sigma_{\varepsilon}^2 > 0$,
             $\sigma_{f}^2 > 0$,
             $\phi > 0$,
-            $i, j = 1, \dots, N$,
-            and $m_f(\cdot)$ is a mean function left unspecified w.l.o.g.
-          \end{block}
-
-          \begin{block}{Choice of weight function}
-            \begin{description}
-            \item Learn how the input predictive relevance
-              varies over the index space
-            \item[Smoothness] Enforce smoothness on relevance
-              over the index space
-            \item[Parsimony] Fewer parameters than the vector representation
-            \item[Interpretation]: for modeling feedback loop and
-              physical model understanding
-            \end{description}
+            and $m_f(\cdot)$ is left unspecified w.l.o.g. \\
+            Priors:
+            $\phi\sim\textsc{InvGamma}$, and
+            $\sigma_f, \sigma_\varepsilon \sim \textsc{N}^{+}$
           \end{block}
 
           \begin{block}{Learning \& validation}
             Fully Bayesian inference on the unknown quantities $\bm{\theta}$.
-            One MCMC chain~\citep{raftery1992} with $M \in \mathbb{N}$ post warm-up
-            samples generated via the NUTS algorithm~\citep{hoffman2014}.
-            \begin{align}
-              \label{eq:margina-likelihood}
-              \log p(\mathbf{y} | \mathbf{X}, \bm{\theta})
-              =& -\frac{1}{2}
+            One long chain~\citep{raftery1992} with $M \in \mathbb{N}$
+            post warm-up samples generated via the NUTS
+            algorithm~\citep{hoffman2014},
+            \begin{equation}
+              \log p(\bm{\theta} | \mathbf{y}, \mathbf{X})
+              = -\frac{1}{2}
                  {(\mathbf{y} - \mathbf{m}_y)}^\top
                  {\mathbf{S}_y}^{-1}
                  {(\mathbf{y} - \mathbf{m}_y)}
                  -\frac{1}{2}
                  \log | \mathbf{S}_y |
-                 - \frac{n}{2} \log 2\pi \\
-              \label{eq:parameter-posterior}
-              \log p(\bm{\theta} | \mathbf{y}, \mathbf{X})
-              \propto&
-                       \log p(\mathbf{y} | \mathbf{X}, \bm{\theta}) +
-                       \log p(\bm{\theta}).
-            \end{align}
+                 + \log p(\bm{\theta})
+               \end{equation}
+               where
+               ($\mathbf{X}$, $\mathbf{y}$) training input and output,
+               ($\mathbf{m}_y $, $\mathbf{S}_y $) mean and covariance.
+            % \begin{align}
+            %   \label{eq:margina-likelihood}
+            %   \log p(\mathbf{y} | \mathbf{X}, \bm{\theta})
+            %   =& -\frac{1}{2}
+            %      {(\mathbf{y} - \mathbf{m}_y)}^\top
+            %      {\mathbf{S}_y}^{-1}
+            %      {(\mathbf{y} - \mathbf{m}_y)}
+            %      -\frac{1}{2}
+            %      \log | \mathbf{S}_y |
+            %      - \frac{n}{2} \log 2\pi \\
+            %   \label{eq:parameter-posterior}
+            %   \log p(\bm{\theta} | \mathbf{y}, \mathbf{X})
+            %   \propto&
+            %            \log p(\mathbf{y} | \mathbf{X}, \bm{\theta}) +
+            %            \log p(\bm{\theta}).
+            % \end{align}
 
             Validation statistic posterior expectation approximated using a thinned
-            posterior parameter sample with $\tilde{M} \in \mathbb{N}$ draws.
+            posterior parameter sample with $\tilde{M} \in \mathbb{N}$ draws,
             \begin{align}
               \hat{v}_1
               &= {\tilde{M}}^{-1} \sum_{{\tilde{m}}=1}^{{\tilde{M}}} N^{-\frac{1}{2}} \norm{%
@@ -183,13 +198,76 @@ Systems Engineering, Iowa State University}
                 p(\bm{y}_{*} | \bm{X}, \bm{X}_{*}, \bm{y},
                 {\bm{\theta}}_{{\tilde{m}}}) \label{eq:validation-ppld}
             \end{align}
+            where ($\mathbf{X}_\mathbf{*}$, $\mathbf{y}_\mathbf{*}$) test input and output.
           \end{block}
-
         \end{minipage}
       }
       \colorbox{green}{
-        \begin{minipage}[t][20cm][t]{28cm}
+        \begin{minipage}[t][40cm][t]{28cm}
           Right
+          \begin{block}{Asymmetric Squared Exponential weight function}
+            \begin{figure}
+              \centering
+              \includegraphics[width=.85\linewidth]{inc/coda_weight_profiles_fsc040}
+            \end{figure}
+            \begin{equation}
+              \label{eq:weight-ase}
+              \omega(t)
+              =
+              \begin{cases}
+                \text{exp}\left[- {(t - \tau)}^2 \lambda\kappa^{-1}
+                \right] & \text{for } t \le \tau \\
+                \text{exp}\left[- {(t - \tau)}^2 \lambda\kappa
+                \right] & \text{for } t > \tau \\
+              \end{cases}
+            \end{equation}
+            Space:
+            $\omega(t): \mathcal{T} = [0, 1] \to (0, 1]$,
+            $\tau\in[0,1]$,
+            $\lambda > 0$,
+            $\kappa > 0$ \\
+            Priors:
+            $\indent\tau \sim \textsc{Beta}$,
+            $\lambda \sim \textsc{N}^{+}$,
+            $\log(\kappa) \sim \textsc{N}$
+          \end{block}
+
+          \begin{block}{Input relevance statistics}
+            \begin{minipage}[t]{.45\linewidth}
+              \begin{center}
+                Most relevant location
+              \end{center}
+              \begin{equation}
+                \tau=\argmax_{t\in\mathcal{T}}\omega(t)
+              \end{equation}
+            \end{minipage}
+            \begin{minipage}[t]{.45\linewidth}
+              \begin{center}
+                Global relevance
+              \end{center}
+              \begin{equation}
+                \Omega=\phi^{-2}\int_\mathcal{T}\omega(t)\,\mathrm{d}t
+              \end{equation}
+            \end{minipage}
+          \end{block}
+
+          \begin{block}{Choice of weight function}
+            \begin{description}
+            \item[Dynamic] input predictive relevance varies over the index
+              space
+            \item[Smoothness] irons out erratic relevance patterns over the
+              index space
+            \item[Parsimony] fewer parameters than vector representations
+            \item[Interpretation] better physical understanding and
+              statistical modeling
+            \end{description}
+          \end{block}
+        \end{minipage}
+      }
+      \vskip1cm
+      \colorbox{yellow!33}{
+        \begin{minipage}[t][50cm][t]{58cm}
+          Data
           \begin{block}{Microwave Limb Sounder}
             \begin{itemize}
             \item Computer model: forward
@@ -203,45 +281,16 @@ Systems Engineering, Iowa State University}
               well-informed by the measurements~\cite{liversey2020}
             \end{itemize}
           \end{block}
-        \end{minipage}
-      }
-      \vskip1cm
-      \colorbox{yellow!33}{
-        \begin{minipage}[t][50cm][t]{58cm}
-          Data
           \begin{block}{Data}
             \begin{figure}
               \centering
-              \includegraphics[width=.85\linewidth]{inc/mls_input_profiles}
+              \includegraphics[width=.85\linewidth]{inc/mls_input_profiles_fsc045}
             \end{figure}
 
             \begin{center}
               Radiance score variability seems associated with the tropopause Ozone
               concentration
             \end{center}
-          \end{block}
-
-          \begin{block}{Asymmetric Double Exponential weight function}
-            \begin{figure}
-              \centering
-              \includegraphics[width=.85\linewidth]{inc/mls_weight_profiles}
-            \end{figure}
-
-            \begin{equation}
-              \omega(t)
-              =
-              \text{exp}\left\{-(t - \tau)\lambda\kappa^s s\right\}
-            \end{equation}
-            Space:
-            $\omega(t): \mathcal{T} = [0, 1] \to (0, 1]$,
-            $s = \text{sign}(t - \tau)$,
-            $\tau\in[0,1]$,
-            $\lambda > 0$,
-            $\kappa > 0$ \\
-            Priors:
-            $\indent\tau \sim \textsc{Beta}$,
-            $\lambda \sim \textsc{N}^{+}$,
-            $\log(\kappa) \sim \textsc{N}$
           \end{block}
         \end{minipage}
       }
@@ -250,46 +299,79 @@ Systems Engineering, Iowa State University}
   \colorbox{blue!20}{
     \begin{minipage}[t][76cm][t]{58cm}
       Results
-      \begin{block}{In which part of the atmosphere are the inputs most relevant?}
+      \begin{block}{Are inputs equally relevant over the atmosphere?}
         \begin{figure}
           \centering
-          \includegraphics[width=\textwidth]{inc/mmls_weight_posterior_mini1}
+          % \includegraphics[width=\textwidth]{inc/mmls_weight_posterior_mini1}
+          \includegraphics[width=.85\textwidth]{inc/mls_weight_posterior_fsc060}
           \label{fig:mmls-weight-posterior-mini1}
         \end{figure}
       \end{block}
 
       \begin{minipage}[t]{1.0\linewidth}
         \begin{minipage}[t]{.5\linewidth}
-          \begin{block}{Which inputs are more relevant?}
+          \begin{block}{Are all the inputs equally relevant?}
             \begin{figure}
               \centering
-              \includegraphics[width=\linewidth]{inc/mls_weight_integral.pdf}
+              \includegraphics[width=.85\linewidth]{inc/mls_weight_integral_fsc070.pdf}
             \end{figure}
+          \end{block}
+          \begin{block}{How does ADRD compare to ARD predictionwise?}
+            \centering
+            \begin{tblr}[evaluate=\fileInput]{
+                width=.85\textwidth,
+                colspec={Q[l,12ex]RRRRR},
+                rows={font=\normalsize, rowsep=5pt}}
+              \fileInput{inc/mmls_validation_mean}
+            \end{tblr}
+
+            Underline: best in class over 8 data splits using
+            $t_{7,.80}\approx1.41$.
+          \end{block}
+
+          \begin{block}{In summary}
+            \begin{itemize}
+            \item ADRD and ARD perform similarly predictionwise
+            \item ADRD and ARD agree on the overall relevance patterns
+            \item ADRD has $\sim15$ times fewer parameters to learn
+            \item ADRD rules out erratic patterns in relevance
+            \item ADRD posterior patterns are consistent with the underlying
+              science
+              \begin{itemize}
+              \item Relevance within a chemical species over the vertical grid
+                via the $\omega(t)$ function
+              \item Relevance between chemical species via the integrated weight
+                statistic $\Omega$
+              \end{itemize}
+            \end{itemize}
           \end{block}
         \end{minipage}
         \begin{minipage}[t]{.5\linewidth}
-          \begin{block}{Out-of-sample prediction}
-            \begin{tblr}[evaluate=\fileInput]{
-                width=\textwidth,
-                colspec={Q[l,11ex]RRRRR},
-                rows={font=\normalsize}}
-              \fileInput{inc/mmls_validation_mean}
-            \end{tblr}
-          \end{block}
-          \begin{block}{In summary...}
+          \begin{block}{Onwards and upwards}
+            Toward a framework for Gaussian processes with functional inputs
+            $Y = f(X_1(u), X_2(v), \dots, x_1, x_2, \dots)$
+
             \begin{itemize}
-            \item Fewer parameters than a vector representation
-            \item Better prediction than FPCA (information loss)
-            \item Rich interpretation
-            \item The weight posterior can feed downstream analysis (e.g.,
-              calibration, design)
+            \item Multiple scalar\textsuperscript{\ddag}, vector, and functional inputs
+            \item Flexible functional weight forms: ADE, ASE, FEW\textsuperscript{\ddag}
+            \item Case studies: Microwave Limb Sounder,
+              Water Erosion Prediction Project\textsuperscript{\ddag}
+            \item Exact integral for piecewise linear inputs\textsuperscript{\ddag}
             \end{itemize}
+
+            \textsuperscript{\ddag} Manuscript in preparation
+          \end{block}
+
+          \begin{block}{References}
+            \vspace{-1ex}
+            \renewcommand*{\bibfont}{\small}
+            \printbibliography[heading=none]{}
           \end{block}
         \end{minipage}
       \end{minipage}
     \end{minipage}%
   }
-  \colorbox{black}{
+  \colorbox{black!0}{
     \begin{minipage}[t][76cm][t]{3cm}
       %Padding
     \end{minipage}%
@@ -305,6 +387,7 @@ Systems Engineering, Iowa State University}
     Research.
     \textbf{Manuscript}. Modified from
     \href{https://doi.org/10.48550/arXiv.2209.00044}{arXiv:2209.00044}
+    % \textbf{Font size}. \the\dimexpr1em % 2.8346456693 mm
     % \textbf{References}.
     % \printbibliography[heading=none]{}
   \end{minipage}
